@@ -31,11 +31,19 @@ Linked In: | Roy Dybing  | weekly
 - Version format: [major release].[new feature(s)].[bugfix patch-version]
 - Date format: yyyy-mm-dd
 
+#### v.1.0.1: 16th of September 2019
+
+- Removed some debug output
+
 #### v.1.0.0: 16th of September 2019
 
 - Initial release 
 
 ---
+
+## Known issues
+
+- Some strange formatting of the play-field at around the 2000 points mark...
 
 ## License: MIT
 

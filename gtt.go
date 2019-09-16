@@ -432,17 +432,10 @@ func saveScore(hs []hiScoreT) {
 	if err := tempJSON.Encode(hs); err != nil {
 		log.Fatalf("Could not encode hi score file: %v\n", err)
 	}
-
-	for i := range hs {
-		fmt.Printf("%26s - %6d\n", hs[i].Name, hs[i].Score)
-	}
-	fmt.Println(tempJSON)
-
 }
 
 func displayScore(hs []hiScoreT) string {
 	var score string
-
 	for i := range hs {
 		score += fmt.Sprintf("%8s - %6d\n", hs[i].Name, hs[i].Score)
 	}
