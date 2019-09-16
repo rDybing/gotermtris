@@ -96,9 +96,9 @@ func main() {
 
 func (screen screenT) drawMenu(hs []hiScoreT) {
 	screen.clearField()
-	menuText := "      GoTermTris\n\n"
-	menuText += "        ʕ◔ϖ◔ʔ\n\n"
-	menuText += "   2019 © Roy Dybing\n"
+	menuText := "     GoTermTris\n\n"
+	menuText += "       ʕ◔ϖ◔ʔ\n\n"
+	menuText += "  2019 © Roy Dybing\n"
 	menuText += "    License: MIT\n\n"
 	menuText += "    High Scores:\n\n"
 	menuText += displayScore(hs)
@@ -439,7 +439,7 @@ func saveScore(hs []hiScoreT) {
 func displayScore(hs []hiScoreT) string {
 	var score string
 	for i := range hs {
-		score += fmt.Sprintf("%8s - %6d\n", hs[i].Name, hs[i].Score)
+		score += fmt.Sprintf("  %8s - %6d\n", hs[i].Name, hs[i].Score)
 	}
 	return score
 }

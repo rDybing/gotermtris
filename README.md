@@ -56,7 +56,7 @@ ticks to move down
 
 ## Known issues
 
-- N/A
+- Occasionally do not detect new brick reached top and game should end...
 
 ## License: MIT
 
