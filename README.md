@@ -11,6 +11,8 @@ places wholesale borrowed game-logic from his source, found
 A few bells and whistles have been added such as a start-screen with top-5
 list and having said list be saved on disk.
 
+<img src="https://i.imgur.com/mk0vDkN.png" alt="From Terminator on Ubuntu 18.04" width="20%">
+
 ## Build
 
 Contains the following non-standard library:
