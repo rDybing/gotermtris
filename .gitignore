@@ -1,0 +1,6 @@
+# no binaries
+gotermtris
+*.exe
+
+# no high-score list
+hiScore.json
