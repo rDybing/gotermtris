@@ -33,6 +33,17 @@ Linked In: | Roy Dybing  | weekly
 - Version format: [major release].[new feature(s)].[bugfix patch-version]
 - Date format: yyyy-mm-dd
 
+#### v.1.0.2: 16th of September 2019
+
+- Some strange formatting of the play-field at around the 2000 points mark...
+	- Fixed by adjusting timings a tad
+- Got to close some input (keyboard) channels when not in relevant view they 
+should be active in...
+	- Fixed by giving each Event listener a unique name
+- Made the game a bit harder by lowering ticker interval and adjusting minimum 
+ticks to move down
+- New Brick should now spawn in middle
+
 #### v.1.0.1: 16th of September 2019
 
 - Removed some debug output
@@ -45,9 +56,7 @@ Linked In: | Roy Dybing  | weekly
 
 ## Known issues
 
-- Some strange formatting of the play-field at around the 2000 points mark...
-- Got to close some input (keyboard) channels when not in relevant view they 
-should be active in...
+- N/A
 
 ## License: MIT
 

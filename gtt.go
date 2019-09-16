@@ -82,15 +82,14 @@ func main() {
 	screen.drawMenu(hiScore)
 	quit := false
 	for !quit {
-		event := <-menuEvent
-		switch event.ID {
+		eventMenuLoop := <-menuEvent
+		switch eventMenuLoop.ID {
 		case "<Space>":
 			score := screen.gameLoop(brickPiece)
 			hiScore = screen.newHiScore(hiScore, score)
 			screen.drawMenu(hiScore)
-		case "q", "<C-c>":
+		case "<Escape>", "<C-c>":
 			quit = true
-			return
 		}
 	}
 }
@@ -105,7 +104,7 @@ func (screen screenT) drawMenu(hs []hiScoreT) {
 	menuText += displayScore(hs)
 	menuText += "\n    ------------- \n\n"
 	menuText += " Press Space to Start\n"
-	menuText += "   Press Q to quit\n"
+	menuText += " Press Escape to quit\n"
 	screen.ui.Text = menuText
 	ui.Render(screen.ui)
 }
@@ -114,7 +113,7 @@ func (screen screenT) gameLoop(brickPiece []brickT) int {
 	state := initGameState()
 	var brickState brickStateT
 	brickState.newBrick(screen, &state)
-	ticker := time.NewTicker(time.Millisecond * 50).C
+	ticker := time.NewTicker(time.Millisecond * 40).C
 	keyEvent := ui.PollEvents()
 
 	screen.setFieldBoundary()
@@ -122,8 +121,8 @@ func (screen screenT) gameLoop(brickPiece []brickT) int {
 	for !state.gameOver {
 		brickTest := brickState
 		select {
-		case event := <-keyEvent:
-			switch event.ID {
+		case eventGameLoop := <-keyEvent:
+			switch eventGameLoop.ID {
 			case "<Left>":
 				brickTest.posX--
 				if brickTest.doBrickFit(screen, brickPiece[brickState.index]) {
@@ -148,8 +147,8 @@ func (screen screenT) gameLoop(brickPiece []brickT) int {
 				if brickTest.doBrickFit(screen, brickPiece[brickState.index]) {
 					brickState.rotation = brickTest.rotation
 				}
-			case "q", "<C-c>":
-				return state.score
+			case "<Escape>", "<C-c>":
+				state.gameOver = true
 			}
 		case <-ticker:
 			if state.getPullDown() {
@@ -177,9 +176,9 @@ func (screen screenT) gameLoop(brickPiece []brickT) int {
 
 func (s *gameStateT) getPullDown() bool {
 	s.tickerCount++
-	// make faster every 10 bricks
-	if s.bricksCount == 10 {
-		if s.ticksToDown >= 5 {
+	// make faster every X bricks
+	if s.bricksCount >= 10 {
+		if s.ticksToDown > 3 {
 			s.ticksToDown--
 		}
 		s.bricksCount = 0
@@ -214,7 +213,7 @@ func (bs brickStateT) doBrickFit(s screenT, brick brickT) bool {
 func (bs *brickStateT) newBrick(s screenT, gs *gameStateT) {
 	bs.index = rand.Intn(7)
 	bs.rotation = 0
-	bs.posX = s.field.x / 2
+	bs.posX = (s.field.x / 2) - 2
 	bs.posY = 0
 	gs.bricksCount++
 	gs.bricksTotal++
@@ -265,7 +264,7 @@ func (screen *screenT) checkLines(bs brickStateT, gs *gameStateT) {
 
 func (screen *screenT) deleteLines(l int, gs *gameStateT) {
 	for i := 0; i < l; i++ {
-		time.Sleep(time.Millisecond * 50)
+		time.Sleep(time.Millisecond * 75)
 		for y := 0; y < screen.field.y; y++ {
 			for x := 1; x < screen.field.x-1; x++ {
 				if screen.fieldBuffer[x+(y*screen.field.x)] == 8 {
@@ -353,17 +352,20 @@ func (screen *screenT) newHiScore(hs []hiScoreT, score int) []hiScoreT {
 		menuText += "  the top five list!\n\n"
 		menuText += "   Enter your name:\n"
 		screen.ui.Text = menuText
-		ui.Render(screen.ui)
+		//ui.Render(screen.ui)
 		scoreEvent := ui.PollEvents()
 		var nameOut string
-		//fmt.Scanf("%s\n", &name)
 		back := false
 		for !back {
-			event := <-scoreEvent
-			if event.ID == "<Enter>" {
+			eventScore := <-scoreEvent
+			if eventScore.ID == "<Enter>" {
 				back = true
-			} else {
-				nameOut += event.ID
+			} else if eventScore.ID != "<Up>" &&
+				eventScore.ID != "<Left>" &&
+				eventScore.ID != "<Right>" &&
+				eventScore.ID != "<Down>" &&
+				eventScore.ID != "<Escape>" {
+				nameOut += eventScore.ID
 				screen.ui.Text = menuText + "\n  -> " + nameOut + " <-"
 				ui.Render(screen.ui)
 			}
@@ -446,16 +448,16 @@ func displayScore(hs []hiScoreT) string {
 
 func initScreen() screenT {
 	var s screenT
-	s.size.x = 22
-	s.size.y = 22
+	s.size.x = 24
+	s.size.y = 21
 	s.field.x = 12
 	s.field.y = 18
 	s.fieldXOffset = 5
-	s.fieldYOffset = 2
+	s.fieldYOffset = 1
 	s.ui = widgets.NewParagraph()
 	s.ui.Text = ""
 	s.ui.Border = true
-	s.ui.SetRect(0, 0, s.size.x+2, s.size.y+5)
+	s.ui.SetRect(0, 0, s.size.x, s.size.y+5)
 	s.buffer = ""
 	s.fieldBuffer = make([]byte, s.field.x*s.field.y)
 	s.brickBuffer = make([]byte, s.field.x*s.field.y)
