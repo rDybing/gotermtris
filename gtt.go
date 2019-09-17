@@ -113,7 +113,7 @@ func (screen screenT) gameLoop(brickPiece []brickT) int {
 	state := initGameState()
 	var brickState brickStateT
 	brickState.newBrick(screen, &state)
-	ticker := time.NewTicker(time.Millisecond * 40).C
+	ticker := time.NewTicker(time.Millisecond * 35).C
 	keyEvent := ui.PollEvents()
 
 	screen.setFieldBoundary()
@@ -149,6 +149,7 @@ func (screen screenT) gameLoop(brickPiece []brickT) int {
 				}
 			case "<Escape>", "<C-c>":
 				state.gameOver = true
+				return state.score
 			}
 		case <-ticker:
 			if state.getPullDown() {
@@ -161,6 +162,7 @@ func (screen screenT) gameLoop(brickPiece []brickT) int {
 					brickState.newBrick(screen, &state)
 					if !brickState.doBrickFit(screen, brickPiece[brickState.index]) {
 						state.gameOver = true
+						return state.score
 					}
 				}
 			}
@@ -264,7 +266,7 @@ func (screen *screenT) checkLines(bs brickStateT, gs *gameStateT) {
 
 func (screen *screenT) deleteLines(l int, gs *gameStateT) {
 	for i := 0; i < l; i++ {
-		time.Sleep(time.Millisecond * 75)
+		time.Sleep(time.Millisecond * 51)
 		for y := 0; y < screen.field.y; y++ {
 			for x := 1; x < screen.field.x-1; x++ {
 				if screen.fieldBuffer[x+(y*screen.field.x)] == 8 {
