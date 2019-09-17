@@ -33,6 +33,12 @@ Linked In: | Roy Dybing  | weekly
 - Version format: [major release].[new feature(s)].[bugfix patch-version]
 - Date format: yyyy-mm-dd
 
+#### v.1.0.3: 17th of September 2019
+
+- Occasionally do not detect new brick reached top and game should end...
+	- Turns out it did, it just did not update the output. Fixed.
+- Added score to the end-screen if new entry to top five.
+
 #### v.1.0.2: 16th of September 2019
 
 - Some strange formatting of the play-field at around the 2000 points mark...
@@ -56,7 +62,8 @@ ticks to move down
 
 ## Known issues
 
-- Occasionally do not detect new brick reached top and game should end...
+- Still may corrupt the play-field. Narrowed it down to the Go-Routines 
+removing completed lines if it coincides with the tick to refresh display.
 
 ## License: MIT
 

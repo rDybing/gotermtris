@@ -351,10 +351,12 @@ func getRune(index byte) rune {
 func (screen *screenT) newHiScore(hs []hiScoreT, score int) []hiScoreT {
 	if score > hs[4].Score {
 		menuText := "  You made it into\n"
-		menuText += "  the top five list!\n\n"
+		menuText += "  the top five list!\n"
+		menuText += "   with a score of\n"
+		menuText += fmt.Sprintf("      %6d\n\n", score)
 		menuText += "   Enter your name:\n"
 		screen.ui.Text = menuText
-		//ui.Render(screen.ui)
+		ui.Render(screen.ui)
 		scoreEvent := ui.PollEvents()
 		var nameOut string
 		back := false
