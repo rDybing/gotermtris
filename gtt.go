@@ -115,6 +115,8 @@ func (screen screenT) gameLoop(brickPiece []brickT) int {
 	brickState.newBrick(screen, &state)
 	ticker := time.NewTicker(time.Millisecond * 35).C
 	keyEvent := ui.PollEvents()
+	var lines int
+	var deleteLine bool
 
 	screen.setFieldBoundary()
 
@@ -158,7 +160,7 @@ func (screen screenT) gameLoop(brickPiece []brickT) int {
 					brickState.posY++
 				} else {
 					screen.lockBrick(brickState, brickPiece[brickState.index])
-					screen.checkLines(brickState, &state)
+					lines, deleteLine = screen.checkLines(brickState, &state)
 					brickState.newBrick(screen, &state)
 					if !brickState.doBrickFit(screen, brickPiece[brickState.index]) {
 						state.gameOver = true
@@ -168,9 +170,12 @@ func (screen screenT) gameLoop(brickPiece []brickT) int {
 			}
 			screen.updateBrickBuffer(brickState, brickPiece[brickState.index])
 			screen.drawScreenBuffer()
-			bufTxt := screen.buffer
-			screen.ui.Text = bufTxt + fmt.Sprintf(" -- Bricks: %06d --\n -- Score : %06d --", state.bricksTotal, state.score)
+			screen.ui.Text = screen.buffer + fmt.Sprintf(" -- Bricks: %06d --\n -- Score : %06d --", state.bricksTotal, state.score)
 			ui.Render(screen.ui)
+			if deleteLine {
+				screen.deleteLines(lines, &state)
+				deleteLine = false
+			}
 		}
 	}
 	return state.score
@@ -241,7 +246,7 @@ func rotateBrick(brickPixelX, brickPixelY, brickRotation int) int {
 
 // ******************************************* Playfield Handling Stuff ************************************************
 
-func (screen *screenT) checkLines(bs brickStateT, gs *gameStateT) {
+func (screen *screenT) checkLines(bs brickStateT, gs *gameStateT) (int, bool) {
 	var lines int
 	for brickY := 0; brickY < 4; brickY++ {
 		if bs.posY+brickY < screen.field.y-1 {
@@ -260,13 +265,13 @@ func (screen *screenT) checkLines(bs brickStateT, gs *gameStateT) {
 		}
 	}
 	if lines > 0 {
-		go screen.deleteLines(lines, gs)
+		return lines, true
 	}
+	return 0, false
 }
 
 func (screen *screenT) deleteLines(l int, gs *gameStateT) {
 	for i := 0; i < l; i++ {
-		time.Sleep(time.Millisecond * 51)
 		for y := 0; y < screen.field.y; y++ {
 			for x := 1; x < screen.field.x-1; x++ {
 				if screen.fieldBuffer[x+(y*screen.field.x)] == 8 {
@@ -354,7 +359,8 @@ func (screen *screenT) newHiScore(hs []hiScoreT, score int) []hiScoreT {
 		menuText += "  the top five list!\n"
 		menuText += "   with a score of\n"
 		menuText += fmt.Sprintf("      %6d\n\n", score)
-		menuText += "   Enter your name:\n"
+		menuText += "   Enter your name:\n\n"
+		menuText += "  -> "
 		screen.ui.Text = menuText
 		ui.Render(screen.ui)
 		scoreEvent := ui.PollEvents()
@@ -370,7 +376,7 @@ func (screen *screenT) newHiScore(hs []hiScoreT, score int) []hiScoreT {
 				eventScore.ID != "<Down>" &&
 				eventScore.ID != "<Escape>" {
 				nameOut += eventScore.ID
-				screen.ui.Text = menuText + "\n  -> " + nameOut + " <-"
+				screen.ui.Text = menuText + nameOut
 				ui.Render(screen.ui)
 			}
 		}

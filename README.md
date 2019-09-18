@@ -33,6 +33,12 @@ Linked In: | Roy Dybing  | weekly
 - Version format: [major release].[new feature(s)].[bugfix patch-version]
 - Date format: yyyy-mm-dd
 
+#### v.1.0.4: 17th of September 2019
+
+- Still may corrupt the play-field. Narrowed it down to the Go-Routines 
+removing completed lines if it coincides with the tick to refresh display.
+	- Fixed by having lines deleted synced to next tick.
+
 #### v.1.0.3: 17th of September 2019
 
 - Occasionally do not detect new brick reached top and game should end...
@@ -42,13 +48,13 @@ Linked In: | Roy Dybing  | weekly
 #### v.1.0.2: 16th of September 2019
 
 - Some strange formatting of the play-field at around the 2000 points mark...
-	- Fixed by adjusting timings a tad
+	- Fixed by adjusting timings a tad.
 - Got to close some input (keyboard) channels when not in relevant view they 
 should be active in...
-	- Fixed by giving each Event listener a unique name
+	- Fixed by giving each Event listener a unique name.
 - Made the game a bit harder by lowering ticker interval and adjusting minimum 
-ticks to move down
-- New Brick should now spawn in middle
+ticks to move down.
+- New Brick should now spawn in middle.
 
 #### v.1.0.1: 16th of September 2019
 
@@ -62,8 +68,7 @@ ticks to move down
 
 ## Known issues
 
-- Still may corrupt the play-field. Narrowed it down to the Go-Routines 
-removing completed lines if it coincides with the tick to refresh display.
+- N/A
 
 ## License: MIT
 
