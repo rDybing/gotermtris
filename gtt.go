@@ -170,7 +170,8 @@ func (screen screenT) gameLoop(brickPiece []brickT) int {
 			}
 			screen.updateBrickBuffer(brickState, brickPiece[brickState.index])
 			screen.drawScreenBuffer()
-			screen.ui.Text = screen.buffer + fmt.Sprintf(" -- Bricks: %06d --\n -- Score : %06d --", state.bricksTotal, state.score)
+			screen.ui.Text = screen.buffer + fmt.Sprintf(" -- Bricks: %06d --\n -- Score : %06d --",
+				state.bricksTotal, state.score)
 			ui.Render(screen.ui)
 			if deleteLine {
 				screen.deleteLines(lines, &state)
@@ -368,16 +369,26 @@ func (screen *screenT) newHiScore(hs []hiScoreT, score int) []hiScoreT {
 		back := false
 		for !back {
 			eventScore := <-scoreEvent
-			if eventScore.ID == "<Enter>" {
-				back = true
-			} else if eventScore.ID != "<Up>" &&
-				eventScore.ID != "<Left>" &&
-				eventScore.ID != "<Right>" &&
-				eventScore.ID != "<Down>" &&
-				eventScore.ID != "<Escape>" {
+			if len(eventScore.ID) == 1 {
 				nameOut += eventScore.ID
 				screen.ui.Text = menuText + nameOut
 				ui.Render(screen.ui)
+			} else {
+				if eventScore.ID == "<Enter>" {
+					back = true
+				}
+				if eventScore.ID == "<Backspace>" {
+					nameLength := len(nameOut)
+					if nameLength > 0 {
+						nameTemp := nameOut
+						nameOut = ""
+						for i := 0; i < nameLength-1; i++ {
+							nameOut += string(nameTemp[i])
+						}
+					}
+					screen.ui.Text = menuText + nameOut
+					ui.Render(screen.ui)
+				}
 			}
 		}
 		hsTemp := hs

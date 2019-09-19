@@ -31,7 +31,11 @@ Linked In: | Roy Dybing  | weekly
 ## Releases
 
 - Version format: [major release].[new feature(s)].[bugfix patch-version]
-- Date format: yyyy-mm-dd
+
+#### v.1.0.5: 19th of September 2019
+
+- Improved name-input routine on new entry onto hi-Score list, including 
+ability to backspace.
 
 #### v.1.0.4: 17th of September 2019
 
