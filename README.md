@@ -21,10 +21,11 @@ Contains the following non-standard library:
 
 **Contact:**
 
-location   | name/handle | checks
------------|-------------|--------
-github:    | rDybing     | often
-Linked In: | Roy Dybing  | weekly
+location   | name/handle |
+-----------|-------------|
+github:    | rDybing     |
+twitter:   | @DybingRoy  |
+Linked In: | Roy Dybing  |
 
 ---
 
