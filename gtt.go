@@ -354,6 +354,8 @@ func getRune(index byte) rune {
 	return out[index]
 }
 
+// ******************************************* HiScore Stuff ***********************************************************
+
 func (screen *screenT) newHiScore(hs []hiScoreT, score int) []hiScoreT {
 	if score > hs[4].Score {
 		menuText := "  You made it into\n"
@@ -407,8 +409,6 @@ func (screen *screenT) newHiScore(hs []hiScoreT, score int) []hiScoreT {
 	}
 	return hs
 }
-
-// ******************************************* HiScore Stuff ***********************************************************
 
 func loadScore() ([]hiScoreT, bool) {
 	var hs []hiScoreT
